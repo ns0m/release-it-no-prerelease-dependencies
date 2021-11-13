@@ -1,25 +1,23 @@
 {
-  "name": "my-plugin",
-  "version": "0.0.0",
-  "description": "My plugin for release-it",
+  "name": "release-it-no-prerelease-dependencies",
+  "version": "1.0.0",
+  "description": "No pre-release dependencies plugin for release-it",
   "main": "index.js",
   "scripts": {
-    "test": "bron test.js",
-    "release": "release-it"
+    "test": "bron test.js"
   },
   "keywords": [
     "release",
     "release-it",
-    "release-it-plugin"
+    "release-it-plugin",
+    "npm",
+    "dependencies",
+    "prerelease"
   ],
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/my/awesome-plugin.git"
-  },
-  "homepage": "https://github.com/my/awesome-plugin#readme",
-  "bugs": "https://github.com/my/awesome-plugin/issues",
-  "author": "",
+  "repository": "github:ns0m/release-it-no-prerelease-dependencies",
+  "bugs": "https://github.com/ns0m/release-it-no-prerelease-dependencies/issues",
+  "author": "ns0m",
   "peerDependencies": {
     "release-it": "^14.10.0"
   },
@@ -30,10 +28,5 @@
   },
   "engines": {
     "node": ">=10"
-  },
-  "release-it": {
-    "hooks": {
-      "before:init": "npm test"
-    }
   }
 }
