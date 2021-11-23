@@ -4,7 +4,8 @@
   "description": "No pre-release dependencies plugin for release-it",
   "main": "index.js",
   "scripts": {
-    "test": "bron test.js"
+    "test": "bron --serial test.js",
+    "coverage": "c8 npm test"
   },
   "keywords": [
     "release",
@@ -19,11 +20,17 @@
   "bugs": "https://github.com/ns0m/release-it-no-prerelease-dependencies/issues",
   "author": "ns0m",
   "peerDependencies": {
-    "release-it": "^14.10.0"
+    "release-it": "^14.8.0"
+  },
+  "dependencies": {
+    "semver": "^7.3.5"
   },
   "devDependencies": {
     "bron": "^1.1.1",
-    "release-it": "^14.10.0",
+    "c8": "^7.10.0",
+    "fs-monkey": "^1.0.3",
+    "memfs": "^3.3.0",
+    "release-it": "^14.8.0",
     "sinon": "^11.1.1"
   },
   "engines": {
