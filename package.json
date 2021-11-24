@@ -1,6 +1,6 @@
 {
   "name": "release-it-no-prerelease-dependencies",
-  "version": "1.0.0-dev",
+  "version": "1.0.0",
   "description": "No pre-release dependencies plugin for release-it",
   "main": "index.js",
   "files": [
