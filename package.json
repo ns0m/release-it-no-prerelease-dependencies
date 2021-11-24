@@ -3,6 +3,9 @@
   "version": "1.0.0-dev",
   "description": "No pre-release dependencies plugin for release-it",
   "main": "index.js",
+  "files": [
+    "index.js"
+  ],
   "scripts": {
     "test": "bron --serial test.js",
     "coverage": "c8 npm test"
