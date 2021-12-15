@@ -21,7 +21,6 @@
   "license": "MIT",
   "repository": "github:ns0m/release-it-no-prerelease-dependencies",
   "bugs": "https://github.com/ns0m/release-it-no-prerelease-dependencies/issues",
-  "author": "ns0m",
   "peerDependencies": {
     "release-it": "^14.8.0"
   },
