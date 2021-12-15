@@ -82,7 +82,11 @@ test('should throw if preRelease dependencies', async (t) => {
 test('isPreRelease', (t) => {
   const plugin = factory(Plugin);
   assert.equal(plugin.isPreRelease('1.0.0-beta.0'), true);
+  assert.equal(plugin.isPreRelease('1.0.0-beta'), true);
+  assert.equal(plugin.isPreRelease('1.0.0-0'), true);
   assert.equal(plugin.isPreRelease('1.0.0'), false);
+  assert.equal(plugin.isPreRelease(null), false);
+  assert.equal(plugin.isPreRelease(undefined), false);
 });
 
 const DEP_INSTALLED = { name: 'dep-installed', range: '^1.0.0', installed: '1.1.1' };
