@@ -2,14 +2,6 @@
   "name": "release-it-no-prerelease-dependencies",
   "version": "1.1.0-dev",
   "description": "No pre-release dependencies plugin for release-it",
-  "main": "index.js",
-  "files": [
-    "index.js"
-  ],
-  "scripts": {
-    "test": "bron --serial test.js",
-    "coverage": "c8 npm test"
-  },
   "keywords": [
     "release",
     "release-it",
@@ -18,11 +10,16 @@
     "dependencies",
     "prerelease"
   ],
-  "license": "MIT",
-  "repository": "github:ns0m/release-it-no-prerelease-dependencies",
   "bugs": "https://github.com/ns0m/release-it-no-prerelease-dependencies/issues",
-  "peerDependencies": {
-    "release-it": "^14.8.0"
+  "repository": "github:ns0m/release-it-no-prerelease-dependencies",
+  "license": "MIT",
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "coverage": "c8 npm test",
+    "test": "bron --serial test.js"
   },
   "dependencies": {
     "semver": "^7.3.5"
@@ -34,6 +31,9 @@
     "memfs": "^3.3.0",
     "release-it": "^14.8.0",
     "sinon": "^11.1.1"
+  },
+  "peerDependencies": {
+    "release-it": "^14.8.0"
   },
   "engines": {
     "node": ">=10"
