@@ -10,6 +10,6 @@ In [release-it](https://github.com/release-it/release-it) config:
 
 ```
 "plugins": {
-  "release-it-no-prerelease-dependencies": true
+  "release-it-no-prerelease-dependencies": {}
 }
 ```
