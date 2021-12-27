@@ -13,3 +13,14 @@ In [release-it](https://github.com/release-it/release-it) config:
   "release-it-no-prerelease-dependencies": {}
 }
 ```
+
+Optional `"includes"` and `"excludes"` can be defined with [RegExp](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp) strings to filter checked dependencies:
+
+```
+"plugins": {
+  "release-it-no-prerelease-dependencies": {
+    "includes": ["^foo-", "^@bar/"],
+    "excludes": ["baz$"]
+  }
+}
+```

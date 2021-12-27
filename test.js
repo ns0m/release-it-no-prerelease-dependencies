@@ -8,6 +8,7 @@ const { vol } = require('memfs');
 const { patchFs, patchRequire } = require('fs-monkey');
 const { factory, runTasks } = require('release-it/test/util');
 const Plugin = require('.');
+const namespace = require('./package.json').name;
 
 const workingDir = process.cwd();
 const testDir = fs.mkdtempSync(path.join(os.tmpdir(), 'rit-plugin-test-'));
@@ -57,6 +58,20 @@ test('isEnabled false if options=false', (t) => {
     './node_modules': null
   });
   assert.equal(Plugin.isEnabled(false), false);
+});
+
+test('getInitialOptions without includes-excludes options', (t) => {
+  const options = { [namespace]: {} };
+  const plugin = factory(Plugin, { namespace, options });
+  assert.deepEqual(plugin.options.includes, []);
+  assert.deepEqual(plugin.options.excludes, []);
+});
+
+test('getInitialOptions with includes-excludes options', (t) => {
+  const options = { [namespace]: { includes: ['^foo-', '^@bar/'], excludes: ['baz$'] } };
+  const plugin = factory(Plugin, { namespace, options });
+  assert.deepEqual(plugin.options.includes, [/^foo-/, /^@bar\//]);
+  assert.deepEqual(plugin.options.excludes, [/baz$/]);
 });
 
 test('should not throw if no preRelease dependencies', async (t) => {
@@ -145,8 +160,7 @@ test('hasPreReleaseDependencies true', (t) => {
   ]);
 });
 
-test('getPreReleaseDependenciesInfo', (t) => {
-  const plugin = factory(Plugin);
+const stubAndCallGetPreReleaseDependenciesInfo = (plugin) => {
   sinon
     .stub(plugin, 'getDependencyEntryVersions')
     .withArgs([DEP_INSTALLED.name, DEP_INSTALLED.range])
@@ -161,14 +175,33 @@ test('getPreReleaseDependenciesInfo', (t) => {
     .returns(false)
     .withArgs(DEP_INSTALLED_PRE.installed)
     .returns(true);
-  const preReleaseInfo = plugin.getPreReleaseDependenciesInfo({
+  return plugin.getPreReleaseDependenciesInfo({
     [DEP_INSTALLED.name]: DEP_INSTALLED.range,
     [DEP_INSTALLED_PRE.name]: DEP_INSTALLED_PRE.range,
     [DEP_NOT_INSTALLED.name]: DEP_NOT_INSTALLED.range
   });
+};
+
+test('getPreReleaseDependenciesInfo found', (t) => {
+  const plugin = factory(Plugin);
+  const preReleaseInfo = stubAndCallGetPreReleaseDependenciesInfo(plugin);
   assert.deepEqual(preReleaseInfo, {
     [DEP_INSTALLED_PRE.name]: { range: DEP_INSTALLED_PRE.range, installed: DEP_INSTALLED_PRE.installed }
   });
+});
+
+test('getPreReleaseDependenciesInfo but not included', (t) => {
+  const options = { [namespace]: { includes: [`^${DEP_INSTALLED.name}$`, `^${DEP_NOT_INSTALLED.name}$`] } };
+  const plugin = factory(Plugin, { namespace, options });
+  const preReleaseInfo = stubAndCallGetPreReleaseDependenciesInfo(plugin);
+  assert.deepEqual(preReleaseInfo, {});
+});
+
+test('getPreReleaseDependenciesInfo but excluded', (t) => {
+  const options = { [namespace]: { excludes: [`^${DEP_INSTALLED_PRE.name}$`] } };
+  const plugin = factory(Plugin, { namespace, options });
+  const preReleaseInfo = stubAndCallGetPreReleaseDependenciesInfo(plugin);
+  assert.deepEqual(preReleaseInfo, {});
 });
 
 test('getDependencyEntryVersions', (t) => {

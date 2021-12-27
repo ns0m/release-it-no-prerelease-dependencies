@@ -12,6 +12,19 @@ class NoPreReleaseDependenciesPlugin extends Plugin {
     return hasAccess(MANIFEST_PATH) && hasAccess(MODULES_PATH) && options !== false;
   }
 
+  getInitialOptions(...args) {
+    const initialOptions = super.getInitialOptions(...args);
+    initialOptions.includes = []
+      .concat(initialOptions.includes)
+      .filter(Boolean)
+      .map((inc) => new RegExp(inc));
+    initialOptions.excludes = []
+      .concat(initialOptions.excludes)
+      .filter(Boolean)
+      .map((exc) => new RegExp(exc));
+    return initialOptions;
+  }
+
   init() {
     if (this.hasPreReleaseDependencies()) {
       const { preReleaseDependencies } = this.getContext();
@@ -42,8 +55,20 @@ class NoPreReleaseDependenciesPlugin extends Plugin {
     return Object.fromEntries(
       Object.entries(dependencies)
         .map(this.getDependencyEntryVersions, this)
-        .filter(([, { installed }]) => {
-          return Boolean(installed) && this.isPreRelease(installed);
+        .filter(([packageName, { installed }]) => {
+          const matchFilter = Boolean(installed) && this.isPreRelease(installed);
+          if (matchFilter) {
+            const isIncluded =
+              !this.options.includes.length || this.options.includes.some((incRegExp) => incRegExp.test(packageName));
+            const isExcluded = this.options.excludes.some((incRegExp) => incRegExp.test(packageName));
+            if (!isIncluded || isExcluded) {
+              this.log.warn(
+                `Dependency "${packageName}" has been detected with incorrect pre-release version (${installed}) but skipped because of includes-excludes options`
+              );
+              return false;
+            }
+          }
+          return matchFilter;
         })
     );
   }
@@ -53,7 +78,7 @@ class NoPreReleaseDependenciesPlugin extends Plugin {
     try {
       installedVersion = require(path.resolve(MODULES_PATH, packageName, MANIFEST_PATH)).version;
     } catch (err) {
-      this.log.warn(`Failed to get installed version for dependency ${packageName}`);
+      this.log.warn(`Failed to get installed version for dependency "${packageName}"`);
     }
     return [packageName, { range: versionRange, installed: installedVersion }];
   }
