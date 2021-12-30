@@ -30,7 +30,7 @@ const initVolume = (volumeJson) => {
   vol.fromJSON(volumeJson);
 };
 
-test('isEnabled true with manifest and modules', (t) => {
+test('isEnabled true with manifest and modules', () => {
   initVolume({
     './package.json': JSON.stringify({ dependencies: {}, devDependencies: {} }),
     './node_modules': null
@@ -38,21 +38,21 @@ test('isEnabled true with manifest and modules', (t) => {
   assert.equal(Plugin.isEnabled(), true);
 });
 
-test('isEnabled false without manifest', (t) => {
+test('isEnabled false without manifest', () => {
   initVolume({
     './node_modules': null
   });
   assert.equal(Plugin.isEnabled(), false);
 });
 
-test('isEnabled false without modules', (t) => {
+test('isEnabled false without modules', () => {
   initVolume({
     './package.json': JSON.stringify({ dependencies: {}, devDependencies: {} })
   });
   assert.equal(Plugin.isEnabled(), false);
 });
 
-test('isEnabled false if options=false', (t) => {
+test('isEnabled false if options=false', () => {
   initVolume({
     './package.json': JSON.stringify({ dependencies: {}, devDependencies: {} }),
     './node_modules': null
@@ -60,27 +60,27 @@ test('isEnabled false if options=false', (t) => {
   assert.equal(Plugin.isEnabled(false), false);
 });
 
-test('getInitialOptions without includes-excludes options', (t) => {
+test('getInitialOptions without includes-excludes options', () => {
   const options = { [namespace]: {} };
   const plugin = factory(Plugin, { namespace, options });
   assert.deepEqual(plugin.options.includes, []);
   assert.deepEqual(plugin.options.excludes, []);
 });
 
-test('getInitialOptions with includes-excludes options', (t) => {
+test('getInitialOptions with includes-excludes options', () => {
   const options = { [namespace]: { includes: ['^foo-', '^@bar/'], excludes: ['baz$'] } };
   const plugin = factory(Plugin, { namespace, options });
   assert.deepEqual(plugin.options.includes, [/^foo-/, /^@bar\//]);
   assert.deepEqual(plugin.options.excludes, [/baz$/]);
 });
 
-test('should not throw if no preRelease dependencies', async (t) => {
+test('should not throw if no preRelease dependencies', async () => {
   const plugin = factory(Plugin);
   sinon.stub(plugin, 'hasPreReleaseDependencies').returns(false);
   await assert.doesNotReject(runTasks(plugin));
 });
 
-test('should throw if preRelease dependencies', async (t) => {
+test('should throw if preRelease dependencies', async () => {
   const plugin = factory(Plugin);
   sinon.stub(plugin, 'hasPreReleaseDependencies').returns(true);
   sinon.stub(plugin, 'getContext').returns({
@@ -94,7 +94,7 @@ test('should throw if preRelease dependencies', async (t) => {
   await assert.rejects(runTasks(plugin));
 });
 
-test('isPreRelease', (t) => {
+test('isPreRelease', () => {
   const plugin = factory(Plugin);
   assert.equal(plugin.isPreRelease('1.0.0-beta.0'), true);
   assert.equal(plugin.isPreRelease('1.0.0-beta'), true);
@@ -108,7 +108,7 @@ const DEP_INSTALLED = { name: 'dep-installed', range: '^1.0.0', installed: '1.1.
 const DEP_INSTALLED_PRE = { name: 'dep-installed-pre', range: '^3.0.0-pre', installed: '3.0.0-beta.3' };
 const DEP_NOT_INSTALLED = { name: 'dep-not-installed', range: '*', installed: undefined };
 
-test('hasPreReleaseDependencies false', (t) => {
+test('hasPreReleaseDependencies false', () => {
   initVolume({
     './package.json': JSON.stringify({ dependencies: { [DEP_INSTALLED.name]: DEP_INSTALLED.range } })
   });
@@ -133,7 +133,7 @@ test('hasPreReleaseDependencies false', (t) => {
   ]);
 });
 
-test('hasPreReleaseDependencies true', (t) => {
+test('hasPreReleaseDependencies true', () => {
   initVolume({
     './package.json': JSON.stringify({ devDependencies: { [DEP_INSTALLED_PRE.name]: DEP_INSTALLED_PRE.range } })
   });
@@ -182,7 +182,7 @@ const stubAndCallGetPreReleaseDependenciesInfo = (plugin) => {
   });
 };
 
-test('getPreReleaseDependenciesInfo found', (t) => {
+test('getPreReleaseDependenciesInfo found', () => {
   const plugin = factory(Plugin);
   const preReleaseInfo = stubAndCallGetPreReleaseDependenciesInfo(plugin);
   assert.deepEqual(preReleaseInfo, {
@@ -190,21 +190,21 @@ test('getPreReleaseDependenciesInfo found', (t) => {
   });
 });
 
-test('getPreReleaseDependenciesInfo but not included', (t) => {
+test('getPreReleaseDependenciesInfo but not included', () => {
   const options = { [namespace]: { includes: [`^${DEP_INSTALLED.name}$`, `^${DEP_NOT_INSTALLED.name}$`] } };
   const plugin = factory(Plugin, { namespace, options });
   const preReleaseInfo = stubAndCallGetPreReleaseDependenciesInfo(plugin);
   assert.deepEqual(preReleaseInfo, {});
 });
 
-test('getPreReleaseDependenciesInfo but excluded', (t) => {
+test('getPreReleaseDependenciesInfo but excluded', () => {
   const options = { [namespace]: { excludes: [`^${DEP_INSTALLED_PRE.name}$`] } };
   const plugin = factory(Plugin, { namespace, options });
   const preReleaseInfo = stubAndCallGetPreReleaseDependenciesInfo(plugin);
   assert.deepEqual(preReleaseInfo, {});
 });
 
-test('getDependencyEntryVersions', (t) => {
+test('getDependencyEntryVersions', () => {
   initVolume({
     './package.json': JSON.stringify({
       dependencies: { [DEP_INSTALLED.name]: DEP_INSTALLED.range },
