@@ -1,12 +1,12 @@
-import os from 'os';
-import fs from 'fs';
-import path from 'path';
-import test from 'bron';
 import assert from 'assert/strict';
-import sinon from 'sinon';
-import { vol } from 'memfs';
+import test from 'bron';
+import fs from 'fs';
 import { patchFs } from 'fs-monkey';
+import { vol } from 'memfs';
+import os from 'os';
+import path from 'path';
 import { factory, runTasks } from 'release-it/test/util/index.js';
+import sinon from 'sinon';
 import NoPreReleaseDependenciesPlugin from './index.js';
 
 const namespace = JSON.parse(fs.readFileSync('./package.json')).name;
