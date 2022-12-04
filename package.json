@@ -13,7 +13,11 @@
   "bugs": "https://github.com/ns0m/release-it-no-prerelease-dependencies/issues",
   "repository": "github:ns0m/release-it-no-prerelease-dependencies",
   "license": "MIT",
-  "main": "index.js",
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./package.json": "./package.json"
+  },
   "files": [
     "index.js"
   ],
@@ -22,20 +26,20 @@
     "test": "bron --serial test.js"
   },
   "dependencies": {
-    "semver": "^7.3.5"
+    "semver": "^7.3.8"
   },
   "devDependencies": {
-    "bron": "^1.1.1",
-    "c8": "^7.10.0",
+    "bron": "^2.0.3",
+    "c8": "^7.12.0",
     "fs-monkey": "^1.0.3",
-    "memfs": "^3.3.0",
-    "release-it": "^14.8.0",
-    "sinon": "^11.1.1"
+    "memfs": "^3.4.12",
+    "release-it": "^15.2.0",
+    "sinon": "^15.0.0"
   },
   "peerDependencies": {
-    "release-it": "^14.8.0"
+    "release-it": "^15.2.0"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=14"
   }
 }

@@ -1,11 +1,25 @@
-const { EOL } = require('os');
-const path = require('path');
-const { Plugin } = require('release-it');
-const { hasAccess } = require('release-it/lib/util');
-const semver = require('semver');
+import fs from 'fs';
+import { EOL } from 'os';
+import path from 'path';
+import { Plugin } from 'release-it';
+import semver from 'semver';
 
 const MANIFEST_PATH = './package.json';
 const MODULES_PATH = './node_modules';
+
+const hasAccess = (path) => {
+  try {
+    fs.accessSync(path);
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
+const readManifest = (path) => {
+  const data = fs.readFileSync(path);
+  return JSON.parse(data);
+};
 
 class NoPreReleaseDependenciesPlugin extends Plugin {
   static isEnabled(options) {
@@ -39,7 +53,7 @@ class NoPreReleaseDependenciesPlugin extends Plugin {
   }
 
   hasPreReleaseDependencies() {
-    const { dependencies = {}, devDependencies = {} } = require(path.resolve(MANIFEST_PATH));
+    const { dependencies = {}, devDependencies = {} } = readManifest(path.resolve(MANIFEST_PATH));
     const preReleaseDepsInfo = this.getPreReleaseDependenciesInfo(dependencies);
     const preReleaseDevDepsInfo = this.getPreReleaseDependenciesInfo(devDependencies);
     this.setContext({
@@ -76,7 +90,7 @@ class NoPreReleaseDependenciesPlugin extends Plugin {
   getDependencyEntryVersions([packageName, versionRange]) {
     let installedVersion;
     try {
-      installedVersion = require(path.resolve(MODULES_PATH, packageName, MANIFEST_PATH)).version;
+      installedVersion = readManifest(path.resolve(MODULES_PATH, packageName, MANIFEST_PATH)).version;
     } catch (err) {
       this.log.warn(`Failed to get installed version for dependency "${packageName}"`);
     }
@@ -84,4 +98,4 @@ class NoPreReleaseDependenciesPlugin extends Plugin {
   }
 }
 
-module.exports = NoPreReleaseDependenciesPlugin;
+export default NoPreReleaseDependenciesPlugin;
