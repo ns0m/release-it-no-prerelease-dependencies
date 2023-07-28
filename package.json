@@ -1,6 +1,6 @@
 {
   "name": "release-it-no-prerelease-dependencies",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "No pre-release dependencies plugin for release-it",
   "keywords": [
     "release",
